@@ -11,9 +11,11 @@ class PlanListScreen extends StatelessWidget {
       appBar: AppBar(title: const Text('Plans')),
       body: StreamBuilder<List<Map<String, dynamic>>>(
         stream: PlanService.streamPlans(),
-        initialData: PlanService.plans,
         builder: (context, snap) {
-          final items = snap.data ?? const [];
+          if (!snap.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          final items = snap.data!;
           if (items.isEmpty) {
             return const Center(child: Text('No plans yet. Tap + to add.'));
           }

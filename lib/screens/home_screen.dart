@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../services/auth_service.dart';
+import 'plan_list_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -31,6 +32,14 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(height: 12),
             Text(user.displayName ?? 'No name'),
             Text(user.email ?? ''),
+            const SizedBox(height: 24),
+            FilledButton.icon(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const PlanListScreen()));
+              },
+              icon: const Icon(Icons.list),
+              label: const Text('Open Plans'),
+            ),
           ],
         ),
       ),

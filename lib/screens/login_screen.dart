@@ -37,11 +37,8 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 const Icon(Icons.map, size: 96),
                 const SizedBox(height: 16),
-                Text(
-                  'Survey Plans',
-                  style: Theme.of(context).textTheme.headlineMedium,
-                  textAlign: TextAlign.center,
-                ),
+                Text('Survey Plans',
+                    style: Theme.of(context).textTheme.headlineMedium),
                 const SizedBox(height: 48),
                 SizedBox(
                   width: 260,
@@ -55,7 +52,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
                         : const Icon(Icons.login),
-                    label: Text(_loading ? 'Signing in…' : 'Continue with Google'),
+                    label:
+                        Text(_loading ? 'Signing in…' : 'Continue with Google'),
                   ),
                 ),
               ],

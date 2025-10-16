@@ -1,37 +1,25 @@
-import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class PlanService {
-  static final List<Map<String, dynamic>> _plans = [];
-  static final _controller = StreamController<List<Map<String, dynamic>>>.broadcast();
-
-  static List<Map<String, dynamic>> get plans => List.unmodifiable(_plans);
-
-  static Stream<List<Map<String, dynamic>>> streamPlans() => _controller.stream;
-
-  static void _emit() => _controller.add(List.unmodifiable(_plans));
-
-  static void addPlan(Map<String, dynamic> data) {
-    final id = data['planNo'];
-    if (_plans.any((p) => p['planNo'] == id)) {
-      // overwrite
-      final idx = _plans.indexWhere((p) => p['planNo'] == id);
-      _plans[idx] = data;
-    } else {
-      _plans.add(data);
-    }
-    _emit();
+  static CollectionReference<Map<String, dynamic>> _col() {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    return FirebaseFirestore.instance.collection('users/$uid/plans');
   }
 
-  static void updatePlan(String id, Map<String, dynamic> data) {
-    final idx = _plans.indexWhere((p) => p['planNo'] == id);
-    if (idx != -1) {
-      _plans[idx] = data;
-      _emit();
-    }
+  static Future<void> addOrUpdatePlan(Map<String, dynamic> data) async {
+    final id = data['planNo'] as String;
+    await _col().doc(id).set({
+      ...data,
+      'updatedAt': FieldValue.serverTimestamp(),
+      'createdAt': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
   }
 
-  static void deletePlan(String id) {
-    _plans.removeWhere((p) => p['planNo'] == id);
-    _emit();
-  }
+  static Future<void> deletePlan(String id) => _col().doc(id).delete();
+
+  static Stream<List<Map<String, dynamic>>> streamPlans() => _col()
+      .orderBy('updatedAt', descending: true)
+      .snapshots()
+      .map((s) => s.docs.map((d) => {'planNo': d.id, ...d.data()}).toList());
 }

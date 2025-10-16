@@ -1,6 +1,6 @@
 name: survey_plans
 publish_to: 'none'
-description: Survey Plans (Google sign-in only)
+description: Survey Plans (Windows Google login + allowlist)
 version: 1.0.0+1
 
 environment:
@@ -11,9 +11,11 @@ dependencies:
     sdk: flutter
   firebase_core: ^3.6.0
   firebase_auth: ^5.3.1
+  cloud_firestore: ^5.5.0
   google_sign_in: ^6.2.1
-  sign_in_button: ^3.2.0
-
+  http: ^1.2.2
+  url_launcher: ^6.3.0
+  crypto: ^3.0.3
   cupertino_icons: ^1.0.8
 
 dev_dependencies:

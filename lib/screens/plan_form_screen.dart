@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import '../services/plan_service.dart';
 
@@ -21,9 +20,12 @@ class _PlanFormScreenState extends State<PlanFormScreen> {
     super.initState();
     final data = widget.initial;
     if (data != null) {
-      _planNo.text = data['planNo'] ?? '';
-      _client.text = data['client'] ?? '';
-      _surveyDate = DateTime.tryParse(data['surveyDate'] ?? '') ?? DateTime.now();
+      _planNo.text = (data['planNo'] ?? '') as String;
+      _client.text = (data['client'] ?? '') as String;
+      final sd = data['surveyDate'];
+      if (sd is String) {
+        _surveyDate = DateTime.tryParse(sd) ?? DateTime.now();
+      }
     }
   }
 
@@ -73,22 +75,15 @@ class _PlanFormScreenState extends State<PlanFormScreen> {
               ),
               const SizedBox(height: 16),
               FilledButton(
-                onPressed: () {
+                onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    final data = {
+                    final data = <String, dynamic>{
                       'planNo': _planNo.text.trim(),
                       'client': _client.text.trim(),
                       'surveyDate': _surveyDate.toIso8601String(),
-                      'updatedAt': DateTime.now().toIso8601String(),
                     };
-                    if (widget.initial == null) {
-                      PlanService.addPlan(data);
-                    } else {
-                      PlanService.updatePlan(data['planNo'], data);
-                    }
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Saved (in-memory only)')),
-                    );
+                    await PlanService.addOrUpdatePlan(data);
+                    if (!context.mounted) return;
                     Navigator.pop(context);
                   }
                 },
