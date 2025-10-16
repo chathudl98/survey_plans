@@ -1,40 +1,18 @@
-# Survey Plans (Flutter + Firebase) — Windows & Android
+# Survey Plans — Google Sign-In Only
 
-Follow these steps to generate platform folders and build for **Windows** and **Android**.
+This package contains the updated files to make your Flutter app use **only Google Sign-In** via Firebase Auth.
 
-## 1) Create platform scaffolding
-```
-flutter create .
-```
-If prompted, keep existing `pubspec.yaml`.
+## How to use
+1. Create (or open) your Flutter project folder.
+2. Extract these files into it, **overwriting** existing files.
+3. Confirm `google-services.json` exists at `android/app/google-services.json`.
+4. Confirm `lib/firebase_options.dart` matches your Firebase project.
+5. Add your device/app **SHA-1 and SHA-256** in Firebase Console > Project Settings > Android app.
+6. Run:
+   ```bash
+   flutter clean
+   flutter pub get
+   flutter run
+   ```
 
-## 2) Packages
-```
-flutter pub get
-```
-
-## 3) Android setup
-In `android/build.gradle` add:
-```
-buildscript {
-    dependencies {
-        classpath 'com.google.gms:google-services:4.4.2'
-    }
-}
-```
-In `android/app/build.gradle` add at bottom:
-```
-apply plugin: 'com.google.gms.google-services'
-```
-
-## 4) Run
-```
-flutter run -d windows   # Desktop
-flutter run -d android   # Android
-```
-
-## 5) Build
-```
-flutter build windows
-flutter build apk
-```
+If you already have more screens, wire your initial post-login screen in `lib/main.dart` by replacing `HomeScreen()`.
